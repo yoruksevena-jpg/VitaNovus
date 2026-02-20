@@ -1,7 +1,7 @@
 {
     "name": "vitanovus",
     "version": "1.0.0",
-    "description": "VitaNovus - AI Powered CV Builder",
+    "description": "Vita - AI Powered CV Builder",
     "main": "backend/server.js",
     "scripts": {
         "start": "node backend/server.js",

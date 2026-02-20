@@ -1,7 +1,7 @@
 {
-    "name": "cv-builder-app",
+    "name": "vitanovus",
     "version": "1.0.0",
-    "description": "CV Builder and Job Search Application",
+    "description": "VitaNovus - AI Powered CV Builder",
     "main": "backend/server.js",
     "scripts": {
         "start": "node backend/server.js",

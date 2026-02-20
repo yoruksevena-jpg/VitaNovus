@@ -9,6 +9,34 @@ const GEMINI_API_URL = window.location.hostname === 'localhost' || window.locati
   : '/api/generate-content';
 
 // Global State
+let currentLang = localStorage.getItem('vita-lang') || (navigator.language.startsWith('tr') ? 'tr' : 'en');
+
+function updatePageLanguage() {
+  const trans = window.translations[currentLang];
+  if (!trans) return;
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (trans[key]) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = trans[key];
+      } else {
+        el.textContent = trans[key];
+      }
+    }
+  });
+
+  // Update HTML lang attribute
+  document.documentElement.lang = currentLang;
+}
+
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('vita-lang', lang);
+  updatePageLanguage();
+}
+
+// Global State
 let cvData = {
   personal: {
     fullName: '',
@@ -80,6 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Landing page specific logic if any
     }
   }
+
+  // Initialize language
+  updatePageLanguage();
 
   // Add scroll effect to header (common)
   window.addEventListener('scroll', handleScroll);

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description"
+        content="AI destekli ücretsiz CV oluşturucu. Profesyonel özgeçmişinizi dakikalar içinde oluşturun.">
+    <title>VitaNovus - Ücretsiz AI CV Oluşturucu</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+
+    <!-- Header & Navigation -->
+    <header class="header" id="header">
+        <div class="container">
+            <nav class="nav">
+                <a href="#" class="logo">VitaNovus</a>
+                <ul class="nav-links">
+                    <li><a href="#features" class="nav-link">Özellikler</a></li>
+                    <li><a href="#pricing" class="nav-link">Fiyatlandırma</a></li>
+                    <li><a href="login.html" class="nav-link" id="navLogin">Giriş Yap</a></li>
+                    <li><a href="register.html" class="btn btn-primary" id="navRegister">Kayıt Ol</a></li>
+                    <!-- Auth elements will be toggled by auth.js -->
+                    <li class="auth-only" style="display: none;"><a href="dashboard.html" class="nav-link">Dashboard</a>
+                    </li>
+                    <li class="auth-only" style="display: none;"><a href="#" class="nav-link logout-btn">Çıkış</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content animate-fade-in">
+                <h1>2026 İçin Hazırlanın<br><span class="text-gradient">AI Destekli CV Oluşturucu</span></h1>
+                <p>Profesyonel özgeçmişinizi dakikalar içinde oluşturun. AI anahtar kelime hedefleme, içerik yazımı ve
+                    tasarım kontrolü ile işe alım sistemlerini geçin.</p>
+                <div class="hero-cta">
+                    <a href="editor.html" class="btn btn-primary btn-lg">Ücretsiz Başla</a>
+                    <a href="#templates" class="btn btn-secondary btn-lg">Şablonları İncele</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="section" id="features">
+        <div class="container">
+            <div class="text-center">
+                <h2>İşe alınmanızı sağlayan<br><span class="text-gradient">içerik odaklı özellikler</span></h2>
+                <p class="mt-2">VitaNovus, diğer tüm AI CV oluşturuculardan daha fazlasını yapıyor</p>
+            </div>
+
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">AI Anahtar Kelime Hedefleme</h3>
+                    <p class="feature-description">VitaNovus, özgeçmişinizi istediğiniz iş için anahtar kelimelerle
+                        kontrol
+                        eder ve mükemmel şekilde uyarlar.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">✨</div>
+                    <h3 class="feature-title">AI İçerik Yazıcı</h3>
+                    <p class="feature-description">AI, işe alım uzmanlarının gerçekten aradığı beceriler ve geçmişe
+                        odaklanarak metrik odaklı özgeçmiş içeriği yazar.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">🎨</div>
+                    <h3 class="feature-title">Tasarım Kontrolü</h3>
+                    <p class="feature-description">Birkaç tıklamayla tamamen ATS-Optimize edilmiş bir özgeçmiş
+                        tasarlayın. Renkler, biçimlendirme, yazı tipi boyutu ve daha fazlasını seçin.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">VitaNovus Skoru</h3>
+                    <p class="feature-description">VitaNovus, özgeçmişinizin kalitesini 23 temel metrikte değerlendirir
+                        ve
+                        Başvuru Takip Sistemlerinden geçmenize yardımcı olur.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">⚡</div>
+                    <h3 class="feature-title">Gerçek Zamanlı Analiz</h3>
+                    <p class="feature-description">Yazdıkça anlık geri bildirim alın. Yaygın hataları belirleyin ve
+                        özgeçmişinizi optimize edin.</p>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">📄</div>
+                    <h3 class="feature-title">20+ Profesyonel Şablon</h3>
+                    <p class="feature-description">Modern, standart, kompakt ve yaratıcı tasarımlar arasından seçim
+                        yapın. Tümü ATS uyumlu.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Templates Section -->
+    <section class="section" id="templates" style="background: white;">
+        <div class="container">
+            <div class="text-center">
+                <h2><span class="text-gradient">20+ ATS Uyumlu</span> Özgeçmiş Şablonu</h2>
+                <p class="mt-2">837 profesyonel özgeçmiş örneğine göz atın ve iş unvanınız için bir tane bulun</p>
+            </div>
+
+            <div class="template-gallery">
+                <!-- Using same template cards but simplified onclick since preview modal isn't here -->
+                <div class="template-card">
+                    <div class="template-preview"
+                        style="background: #f9fafb; display: flex; align-items: center; justify-content: center;">
+                        <div class="mini-cv mini-modern">
+                            <div class="mini-header"></div>
+                            <div class="mini-body">
+                                <div class="mini-line medium"></div>
+                                <div class="mini-line long"></div>
+                                <div class="mini-line short"></div>
+                                <div class="mini-line full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="template-info">
+                        <h4 class="template-name">Modern Şablon</h4>
+                        <p class="template-description">Temiz ve modern tasarım</p>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-preview"
+                        style="background: #f9fafb; display: flex; align-items: center; justify-content: center;">
+                        <div class="mini-cv mini-professional">
+                            <div class="mini-header"></div>
+                            <div class="mini-body" style="padding:0">
+                                <div class="mini-line long"></div>
+                                <div class="mini-line full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="template-info">
+                        <h4 class="template-name">Profesyonel Şablon</h4>
+                        <p class="template-description">Geleneksel format</p>
+                    </div>
+                </div>
+
+                <div class="template-card">
+                    <div class="template-preview"
+                        style="background: #f9fafb; display: flex; align-items: center; justify-content: center;">
+                        <div class="mini-cv mini-creative">
+                            <div class="mini-header"></div>
+                            <div class="mini-body">
+                                <div class="mini-line accent"></div>
+                                <div class="mini-line full"></div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="template-info">
+                        <h4 class="template-name">Yaratıcı Şablon</h4>
+                        <p class="template-description">Cesur tasarım</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-4">
+                <a href="editor.html" class="btn btn-primary btn-lg">Şablonlarla CV Oluştur</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="section" id="pricing" style="background: white;">
+        <div class="container">
+            <div class="text-center">
+                <h2>En Popüler <span class="text-gradient">Planlardan Seçim Yapın</span></h2>
+                <p class="mt-2">Kart gerekmez, hemen başlayın</p>
+            </div>
+
+            <div class="pricing-grid">
+                <div class="pricing-card">
+                    <h3 class="pricing-name">Ücretsiz</h3>
+                    <div class="pricing-price">₺0<span>/ay</span></div>
+                    <ul class="pricing-features">
+                        <li>1 Özgeçmiş</li>
+                        <li>Temel Şablonlar</li>
+                        <li>PDF İndirme</li>
+                        <li>Temel AI Önerileri</li>
+                    </ul>
+                    <a href="editor.html" class="btn btn-outline" style="width: 100%;">Ücretsiz Başla</a>
+                </div>
+
+                <div class="pricing-card featured">
+                    <div class="pricing-badge">En Popüler</div>
+                    <h3 class="pricing-name">Pro</h3>
+                    <div class="pricing-price">₺99<span>/ay</span></div>
+                    <ul class="pricing-features">
+                        <li>Sınırsız Özgeçmiş</li>
+                        <li>Tüm Premium Şablonlar</li>
+                        <li>Gelişmiş AI Özellikler</li>
+                        <li>Anahtar Kelime Hedefleme</li>
+                        <li>Öncelikli Destek</li>
+                        <li>Özel Tasarım Kontrolü</li>
+                    </ul>
+                    <a href="editor.html" class="btn btn-primary" style="width: 100%;">Pro'ya Geç</a>
+                </div>
+
+                <div class="pricing-card">
+                    <h3 class="pricing-name">Lifetime</h3>
+                    <div class="pricing-price">₺499<span>/tek seferlik</span></div>
+                    <ul class="pricing-features">
+                        <li>Tüm Pro Özellikler</li>
+                        <li>Ömür Boyu Erişim</li>
+                        <li>Gelecekteki Tüm Güncellemeler</li>
+                        <li>VIP Destek</li>
+                        <li>Özel Eğitim</li>
+                    </ul>
+                    <a href="editor.html" class="btn btn-outline" style="width: 100%;">Lifetime Al</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="section">
+        <div class="container">
+            <div class="text-center">
+                <h2><span class="text-gradient">4,005,400+</span> Kullanıcı Tarafından Güveniliyor</h2>
+                <p class="mt-2">Gerçek kullanıcılar, gerçek sonuçlar</p>
+            </div>
+
+            <div class="testimonials-grid">
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"VitaNovus beni hayrete düşürdü. Her şeyi kolaylaştırdı. Sadece 5
+                        dakikada
+                        profesyonel bir özgeçmiş oluşturdum ve hemen işe başvurdum."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">AY</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">Ayşe Yılmaz</div>
+                            <div class="testimonial-role">Yazılım Geliştirici</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"Özgeçmiş oluşturmak diş çekmek gibiydi - VitaNovus'u bulana kadar.
+                        Artık
+                        dakikalar içinde özelleştirilmiş özgeçmişler oluşturabiliyorum."</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">MK</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">Mehmet Kaya</div>
+                            <div class="testimonial-role">Proje Yöneticisi</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="testimonial-card">
+                    <p class="testimonial-text">"ATS sistemlerini geçmek çok zordu. VitaNovus sayesinde geri bildirim
+                        almaya ve mülakatlara çağrılmaya başladım. Kesinlikle tavsiye ederim!"</p>
+                    <div class="testimonial-author">
+                        <div class="testimonial-avatar">ZD</div>
+                        <div class="testimonial-info">
+                            <div class="testimonial-name">Zeynep Demir</div>
+                            <div class="testimonial-role">Veri Analisti</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-section">
+                    <h4>VitaNovus</h4>
+                    <p>AI destekli özgeçmiş oluşturucu ile kariyerinizi bir sonraki seviyeye taşıyın.</p>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Ürün</h4>
+                    <ul class="footer-links">
+                        <li><a href="#features">Özellikler</a></li>
+                        <li><a href="#templates">Şablonlar</a></li>
+                        <li><a href="#pricing">Fiyatlandırma</a></li>
+                        <li><a href="editor.html">CV Oluştur</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Şirket</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Hakkımızda</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Kariyer</a></li>
+                        <li><a href="#">İletişim</a></li>
+                    </ul>
+                </div>
+
+                <div class="footer-section">
+                    <h4>Destek</h4>
+                    <ul class="footer-links">
+                        <li><a href="#">Yardım Merkezi</a></li>
+                        <li><a href="#">Gizlilik Politikası</a></li>
+                        <li><a href="#">Kullanım Şartları</a></li>
+                        <li><a href="#">SSS</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <p>&copy; 2026 VitaNovus. Tüm hakları saklıdır.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

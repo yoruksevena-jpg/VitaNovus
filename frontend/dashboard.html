@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV'lerim - VitaNovus</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #f9fafb;
+        }
+    </style>
+    <script>
+        window.onerror = function (msg, url, line, col, error) {
+            const overlay = document.getElementById('debugOverlay');
+            if (overlay) {
+                overlay.innerHTML += `<br><span style="color:red">ERROR: ${msg} at ${line}:${col}</span>`;
+            }
+            return false;
+        };
+
+        window.updateDebugOverlay = function (msg, append = false) {
+            const el = document.getElementById('debugOverlay');
+            if (el) {
+                if (append) el.innerHTML += '<br>' + msg;
+                else el.innerHTML = msg;
+            }
+            console.log('[DEBUG]', msg);
+        };
+    </script>
+</head>
+
+<body>
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-brand">VitaNovus</a>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="sidebar-link active">
+                    <span class="sidebar-icon">🏠</span> Dashboard
+                </a>
+                <a href="editor.html" class="sidebar-link">
+                    <span class="sidebar-icon">📄</span> CV Builder
+                </a>
+                <a href="letters.html" class="sidebar-link">
+                    <span class="sidebar-icon">📝</span> My Letters
+                </a>
+                <a href="optimize.html" class="sidebar-link">
+                    <span class="sidebar-icon">⚙️</span> Optimize
+                </a>
+
+                <a href="plans.html" class="sidebar-link">
+                    <span class="sidebar-icon">💳</span> Upgrade Plan
+                </a>
+                <a href="settings.html" class="sidebar-link">
+                    <span class="sidebar-icon">⚙️</span> Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer" style="padding: 1.5rem; border-top: 1px solid var(--gray-200);">
+                <div class="user-info" style="display: flex; gap: 0.75rem; align-items: center;">
+                    <div class="avatar user-avatar-display"
+                        style="width: 36px; height: 36px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.85rem; box-shadow: var(--shadow-sm);">
+                        US</div>
+                    <div>
+                        <div class="user-name-display"
+                            style="font-weight: 600; font-size: 0.9rem; color: var(--gray-900);">User Name</div>
+                        <div class="user-email-display" style="font-size: 0.75rem; color: var(--gray-500);">Free Plan
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Top Header for Mobile/Context -->
+            <header class="header" id="header"
+                style="background: white; border-bottom: 1px solid var(--gray-200); padding: 1rem 2rem;">
+                <div class="container-fluid"
+                    style="display: flex; justify-content: space-between; align-items: center; max-width: 1280px; margin: 0 auto; width: 100%;">
+                    <h2 id="pageTitle" style="font-size: 1.25rem; margin: 0; font-weight: 600;">Dashboard</h2>
+                    <a href="editor.html" class="btn btn-primary btn-sm">Yeni CV Oluştur</a>
+                </div>
+            </header>
+
+            <!-- My CVs Section -->
+            <section class="section" id="my-cvs" style="padding-top: 2rem; min-height: 80vh;">
+                <div class="container">
+                    <div class="text-center mb-5">
+                        <h2><span class="text-gradient">CV'lerim</span></h2>
+                        <p class="mt-2 text-gray-600">Daha önce oluşturduğunuz özgeçmişleri görüntüleyin, düzenleyin
+                            veya silin</p>
+                    </div>
+
+                    <div class="cv-history-container" id="cvHistoryContainer">
+                        <div class="empty-state" id="emptyState">
+                            <div class="empty-state-icon">📄</div>
+                            <h3>Henüz kaydedilmiş CV yok</h3>
+                            <p style="color: var(--gray-600); margin: 0 auto 1.5rem auto; max-width: 400px;">
+                                Profesyonel kariyerinize ilk adımı atın. Modern şablonlarla dakikalar içinde etkileyici
+                                bir CV oluşturun.
+                            </p>
+                            <a href="editor.html" class="btn btn-primary btn-lg">✨ Yeni CV Oluştur</a>
+                        </div>
+                        <div class="cv-list" id="cvList"></div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Footer -->
+            <footer class="footer"
+                style="padding: 2rem 0; text-align: center; border-top: 1px solid var(--gray-200); background: white;">
+                <div class="container">
+                    <p>&copy; 2026 VitaNovus. Tüm hakları saklıdır.</p>
+                </div>
+            </footer>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script>
+        // Main Auth Logic
+        console.log('dashboard.html: Body Script started.');
+        window.updateDebugOverlay('Body Script Started...', true);
+
+        // Sidebar User Info Update
+        function updateDashboardUI(user) {
+            // Simple UI update for sidebar user info
+            const userNameEls = document.querySelectorAll('.user-info div[style*="font-weight: 600"]');
+            const userEmailEls = document.querySelectorAll('.user-info div[style*="font-size: 0.75rem"]');
+            const avatarEls = document.querySelectorAll('.avatar');
+
+            if (user) {
+                userNameEls.forEach(el => el.textContent = user.email.split('@')[0]);
+                userEmailEls.forEach(el => el.textContent = user.email);
+                avatarEls.forEach(el => el.textContent = user.email.substring(0, 2).toUpperCase());
+            }
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            // Listen for auth-ready event from auth.js
+            document.addEventListener('auth-ready', (e) => {
+                if (e.detail && e.detail.user) {
+                    updateDashboardUI(e.detail.user);
+                }
+            });
+
+            // If auth.js already ran and we missed the event (unlikely with DOMContentLoaded order, but safely check global)
+            if (window.currentUser) {
+                updateDashboardUI(window.currentUser);
+            }
+        });
+    </script>
+    <script src="app.js"></script>
+</body>
+
+</html>

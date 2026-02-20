@@ -1,0 +1,563 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Oluştur - VitaNovus</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Editor specific manual overrides if needed */
+        body {
+            background-color: #f3f4f6;
+        }
+
+        .header {
+            background: white;
+            box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-brand">VitaNovus</a>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="sidebar-link">
+                    <span class="sidebar-icon">🏠</span> Dashboard
+                </a>
+                <a href="#" class="sidebar-link active">
+                    <span class="sidebar-icon">📄</span> CV Builder
+                </a>
+                <a href="letters.html" class="sidebar-link">
+                    <span class="sidebar-icon">📝</span> My Letters
+                </a>
+                <a href="optimize.html" class="sidebar-link">
+                    <span class="sidebar-icon">⚙️</span> Optimize
+                </a>
+                <a href="plans.html" class="sidebar-link">
+                    <span class="sidebar-icon">💳</span> Upgrade Plan
+                </a>
+                <a href="settings.html" class="sidebar-link">
+                    <span class="sidebar-icon">⚙️</span> Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer" style="padding: 1.5rem; border-top: 1px solid var(--gray-200);">
+                <div class="user-info" style="display: flex; gap: 0.75rem; align-items: center;">
+                    <div class="avatar user-avatar-display"
+                        style="width: 36px; height: 36px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.85rem; box-shadow: var(--shadow-sm);">
+                        US</div>
+                    <div>
+                        <div class="user-name-display"
+                            style="font-weight: 600; font-size: 0.9rem; color: var(--gray-900);">User Name</div>
+                        <div class="user-email-display" style="font-size: 0.75rem; color: var(--gray-500);">Free Plan
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <div class="main-content">
+            <!-- Header & Navigation (Simplified for App) -->
+            <header class="header" id="header">
+                <div class="container-wide" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 id="pageTitle" style="font-size: 1.25rem; margin: 0; font-weight: 600;">Editör</h2>
+                    <div style="display: flex; gap: 1rem;">
+                        <a href="dashboard.html" class="btn btn-outline btn-sm">Geri Dön</a>
+                    </div>
+                </div>
+            </header>
+
+            <!-- CV Editor Section -->
+            <section class="section" id="editor" style="padding-top: 2rem;">
+                <div class="container-wide">
+                    <div class="cv-editor">
+                        <!-- Editor Panel (Left) -->
+                        <div class="editor-panel">
+                            <div class="editor-toolbar">
+                                <select id="templateSelect" class="form-select" onchange="changeTemplate()">
+                                    <option value="modern">Modern Şablon</option>
+                                    <option value="professional">Profesyonel Şablon</option>
+                                    <option value="creative">Yaratıcı Şablon</option>
+                                    <option value="minimalist">Minimalist Şablon</option>
+                                    <option value="executive">Yönetici Şablonu</option>
+                                    <option value="tech">Teknoloji Şablonu</option>
+                                </select>
+                                <button class="btn btn-outline" onclick="newCV()"
+                                    style="border-color: var(--gray-300); color: var(--gray-700);">📄 Yeni CV</button>
+                                <button class="btn btn-secondary" onclick="saveCurrentCV()">💾 Kaydet</button>
+                                <button class="btn btn-secondary" onclick="openJobMatcher()"
+                                    style="border: 1px solid var(--primary-500); color: var(--primary-600); background: white;">🎯
+                                    İlanla Eşleştir</button>
+                                <button class="btn btn-primary" onclick="exportToPDF()">📥 İndir</button>
+                                <button class="btn btn-secondary" onclick="openInterviewSimulator()"
+                                    style="border: 1px solid var(--accent-purple); color: var(--accent-purple); background: white;">
+                                    🎤 Mülakat
+                                </button>
+                                <div class="score-badge">
+                                    <span>Skor:</span>
+                                    <span id="cvScore">0</span>/100
+                                </div>
+                            </div>
+
+                            <!-- Personal Information -->
+                            <div class="form-section active" id="section-personal">
+                                <div class="form-section-header" onclick="toggleSection('section-personal')">
+                                    <h3 class="form-section-title">
+                                        <span class="icon">👤</span> Kişisel Bilgiler
+                                    </h3>
+                                    <span class="section-toggle-icon">▼</span>
+                                </div>
+                                <div class="section-content">
+                                    <div class="form-group">
+                                        <label class="form-label">Ad Soyad *</label>
+                                        <input type="text" class="form-input" id="fullName" placeholder="Ahmet Yılmaz"
+                                            oninput="updatePreview()">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Meslek Unvanı *</label>
+                                        <input type="text" class="form-input" id="jobTitle"
+                                            placeholder="Yazılım Geliştirici"
+                                            oninput="updatePreview(); analyzeKeywords()">
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">E-posta *</label>
+                                            <input type="email" class="form-input" id="email"
+                                                placeholder="ahmet@example.com" oninput="updatePreview()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">Telefon *</label>
+                                            <input type="tel" class="form-input" id="phone"
+                                                placeholder="+90 555 123 4567" oninput="updatePreview()">
+                                        </div>
+                                    </div>
+                                    <div class="form-row">
+                                        <div class="form-group">
+                                            <label class="form-label">Konum</label>
+                                            <input type="text" class="form-input" id="location"
+                                                placeholder="İstanbul, Türkiye" oninput="updatePreview()">
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="form-label">LinkedIn</label>
+                                            <input type="url" class="form-input" id="linkedin"
+                                                placeholder="linkedin.com/in/ahmetyilmaz" oninput="updatePreview()">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Professional Summary -->
+                            <div class="form-section" id="section-summary">
+                                <div class="form-section-header" onclick="toggleSection('section-summary')">
+                                    <h3 class="form-section-title">
+                                        <span class="icon">📝</span> Profesyonel Özet
+                                    </h3>
+                                    <span class="section-toggle-icon">▼</span>
+                                </div>
+                                <div class="section-content">
+                                    <div class="form-group">
+                                        <label class="form-label">Özet</label>
+                                        <textarea class="form-textarea" id="summary"
+                                            placeholder="5+ yıllık deneyime sahip, yaratıcı ve çözüm odaklı profesyonel..."
+                                            oninput="updatePreview()"></textarea>
+                                    </div>
+                                    <button class="btn btn-primary btn-sm" onclick="generateSummaryWithAI()"
+                                        type="button">
+                                        ✨ AI ile Oluştur
+                                    </button>
+                                </div>
+                            </div>
+
+                            <!-- Work Experience -->
+                            <div class="form-section" id="section-experience">
+                                <div class="form-section-header" onclick="toggleSection('section-experience')">
+                                    <h3 class="form-section-title">
+                                        <span class="icon">💼</span> İş Deneyimi
+                                    </h3>
+                                    <span class="section-toggle-icon">▼</span>
+                                </div>
+                                <div class="section-content">
+                                    <div id="experienceContainer">
+                                        <div class="experience-item" data-index="0">
+                                            <div class="form-group">
+                                                <label class="form-label">Pozisyon</label>
+                                                <input type="text" class="form-input exp-position"
+                                                    placeholder="Kıdemli Mimar / Satış Müdürü / Öğretmen"
+                                                    oninput="updatePreview()">
+                                            </div>
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label class="form-label">Şirket</label>
+                                                    <input type="text" class="form-input exp-company"
+                                                        placeholder="Tech Company" oninput="updatePreview()">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Tarih</label>
+                                                    <input type="text" class="form-input exp-date"
+                                                        placeholder="Ocak 2020 - Şimdi" oninput="updatePreview()">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Açıklama</label>
+                                                <textarea class="form-textarea exp-description"
+                                                    placeholder="• 10+ kişilik ekibe liderlik ettim&#10;• Performansı %40 artırdım&#10;• Yeni özellikler geliştirdim"
+                                                    oninput="updatePreview()"></textarea>
+                                                <button class="btn btn-secondary btn-sm mt-1"
+                                                    onclick="generateBulletPointsWithAI(0)" type="button">
+                                                    ✨ AI ile Oluştur
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-outline btn-sm mt-2" onclick="addExperience()">+ Deneyim
+                                        Ekle</button>
+                                </div>
+                            </div>
+
+                            <!-- Education -->
+                            <div class="form-section" id="section-education">
+                                <div class="form-section-header" onclick="toggleSection('section-education')">
+                                    <h3 class="form-section-title">
+                                        <span class="icon">🎓</span> Eğitim
+                                    </h3>
+                                    <span class="section-toggle-icon">▼</span>
+                                </div>
+                                <div class="section-content">
+                                    <div id="educationContainer">
+                                        <div class="education-item" data-index="0">
+                                            <div class="form-row">
+                                                <div class="form-group">
+                                                    <label class="form-label">Derece</label>
+                                                    <input type="text" class="form-input edu-degree"
+                                                        placeholder="Lisans / Yüksek Lisans" oninput="updatePreview()">
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="form-label">Tarih</label>
+                                                    <input type="text" class="form-input edu-date"
+                                                        placeholder="2015 - 2019" oninput="updatePreview()">
+                                                </div>
+                                            </div>
+                                            <div class="form-group">
+                                                <label class="form-label">Okul</label>
+                                                <input type="text" class="form-input edu-school"
+                                                    placeholder="İstanbul Teknik Üniversitesi"
+                                                    oninput="updatePreview()">
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <button class="btn btn-outline btn-sm mt-2" onclick="addEducation()">+ Eğitim
+                                        Ekle</button>
+                                </div>
+                            </div>
+
+                            <!-- Skills -->
+                            <div class="form-section" id="section-skills">
+                                <div class="form-section-header" onclick="toggleSection('section-skills')">
+                                    <h3 class="form-section-title">
+                                        <span class="icon">🚀</span> Yetenekler
+                                    </h3>
+                                    <span class="section-toggle-icon">▼</span>
+                                </div>
+                                <div class="section-content">
+                                    <div class="form-group">
+                                        <label class="form-label">Yetenekleriniz (virgülle ayırın)</label>
+                                        <input type="text" class="form-input" id="skills"
+                                            placeholder="AutoCAD, Proje Yönetimi, İletişim, Photoshop..."
+                                            oninput="updatePreview()">
+                                    </div>
+                                    <div id="keywordSuggestions" class="mt-2"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Preview Panel (Right) -->
+                        <div class="preview-panel">
+                            <div class="cv-preview" id="cvPreview">
+                                <div class="cv-header">
+                                    <h1 class="cv-name" id="previewName">Adınız Soyadınız</h1>
+                                    <div class="cv-title" id="previewTitle">Meslek Unvanınız</div>
+                                    <div class="cv-contact">
+                                        <span id="previewEmail">email@example.com</span>
+                                        <span id="previewPhone">+90 555 123 4567</span>
+                                        <span id="previewLocation">Konum</span>
+                                        <span id="previewLinkedin"></span>
+                                    </div>
+                                </div>
+
+                                <div class="cv-section" id="summarySection" style="display: none;">
+                                    <h2 class="cv-section-title">Profesyonel Özet</h2>
+                                    <p id="previewSummary"></p>
+                                </div>
+
+                                <div class="cv-section" id="experienceSection" style="display: none;">
+                                    <h2 class="cv-section-title">İş Deneyimi</h2>
+                                    <div id="previewExperience"></div>
+                                </div>
+
+                                <div class="cv-section" id="educationSection" style="display: none;">
+                                    <h2 class="cv-section-title">Eğitim</h2>
+                                    <div id="previewEducation"></div>
+                                </div>
+
+                                <div class="cv-section" id="skillsSection" style="display: none;">
+                                    <h2 class="cv-section-title">Yetenekler</h2>
+                                    <div class="cv-skills" id="previewSkills"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div> <!-- End Main Content -->
+    </div> <!-- End App Layout -->
+
+    <!-- Job Matcher Modal -->
+    <div id="jobMatcherModal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>🎯 İş İlanı Eşleştirici</h3>
+                <button class="modal-close" onclick="closeJobMatcher()">✕</button>
+            </div>
+
+            <div class="modal-body" id="jobMatcherInputStep">
+                <div class="info-box">
+                    <p>Başvurmak istediğiniz iş ilanının metnini aşağıya yapıştırın. AI, CV'nizi analiz edecek ve
+                        uyumluluk raporu sunacaktır.</p>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">İş İlanı Metni</label>
+                    <textarea id="jobDescriptionInput" class="form-textarea" style="height: 200px;"
+                        placeholder="İş ilanı detaylarını buraya yapıştırın..."></textarea>
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-primary" onclick="analyzeJobMatch()" style="width: 100%;">🚀 Analiz
+                        Et</button>
+                </div>
+            </div>
+
+            <div class="modal-body" id="jobMatcherLoadingStep"
+                style="display: none; text-align: center; padding: 40px 0;">
+                <div class="spinner"></div>
+                <h4 style="margin-top: 20px;">AI Analiz Ediyor...</h4>
+                <p style="color: var(--gray-600);">CV'niz ve iş ilanı karşılaştırılıyor.</p>
+            </div>
+
+            <div class="modal-body" id="jobMatcherResultStep" style="display: none;">
+                <div class="match-score-container">
+                    <div class="score-ring-container">
+                        <svg class="score-ring" width="120" height="120">
+                            <circle class="score-ring-bg" stroke="#e2e8f0" stroke-width="8" fill="transparent" r="52"
+                                cx="60" cy="60" />
+                            <circle id="scoreRingProgress" class="score-ring-progress" stroke="#4f46e5" stroke-width="8"
+                                fill="transparent" r="52" cx="60" cy="60" />
+                        </svg>
+                        <div class="score-value">
+                            <span id="matchScoreValue">0</span>%
+                        </div>
+                    </div>
+                    <div class="score-text">
+                        <h4 id="matchScoreTitle">Analiz Tamamlandı</h4>
+                        <p id="matchScoreSubtitle">İşte uyumluluk raporunuz</p>
+                    </div>
+                </div>
+
+                <div class="analysis-section">
+                    <h5>📋 Analiz Özeti</h5>
+                    <p id="matchAnalysisText" class="analysis-text"></p>
+                </div>
+
+                <div class="analysis-grid">
+                    <div class="analysis-card negative">
+                        <h5>⚠️ Eksik Anahtar Kelimeler</h5>
+                        <div id="missingKeywordsList" class="keyword-tags"></div>
+                    </div>
+                    <div class="analysis-card positive">
+                        <h5>✅ Eşleşen Yetenekler</h5>
+                        <div id="matchingKeywordsList" class="keyword-tags"></div>
+                    </div>
+                </div>
+
+                <div class="analysis-section">
+                    <h5>💡 Tavsiyeler</h5>
+                    <ul id="matchSuggestionsList" class="suggestions-list"></ul>
+                </div>
+
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" onclick="resetJobMatcher()">Yeni Analiz</button>
+                    <button class="btn btn-primary" onclick="closeJobMatcher()">Tamam</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+
+    <!-- Confirm Modal -->
+    <div id="confirmModal" class="modal-overlay">
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <div style="margin-bottom: 1.5rem;">
+                <h3 id="confirmTitle" style="margin-top: 0; color: var(--gray-900);">Emin misiniz?</h3>
+                <p id="confirmMessage" style="color: var(--gray-600); margin: 0;">Bu işlem geri alınamaz.</p>
+            </div>
+            <div style="display: flex; gap: 1rem; justify-content: center;">
+                <button class="btn btn-outline" onclick="closeConfirmModal(false)">İptal</button>
+                <button class="btn btn-primary" id="confirmYesBtn">Evet</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Interview Simulator Modal -->
+    <div id="interviewModal" class="modal-overlay">
+        <div class="modal-content"
+            style="max-width: 800px; width: 90%; height: 90vh; display: flex; flex-direction: column;">
+            <div class="modal-header">
+                <h3>🎤 Mülakat Simülatörü</h3>
+                <button class="modal-close" onclick="closeInterviewSimulator()">✕</button>
+            </div>
+
+            <!-- Step 1: Setup -->
+            <div class="modal-body" id="interviewSetupStep" style="flex: 1; overflow-y: auto;">
+                <div class="info-box"
+                    style="background: rgba(102, 126, 234, 0.1); padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem;">
+                    <h4 style="color: var(--primary-700); margin-top: 0;">Nasıl Çalışır?</h4>
+                    <p style="color: var(--gray-700);">AI, mevcut CV bilgilerinizi (Deneyim, Yetenekler, Pozisyon)
+                        analiz ederek size özel, gerçekçi mülakat soruları soracaktır.</p>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Mülakat Türü Seçin</label>
+                    <div class="grid-2">
+                        <button class="btn btn-outline" onclick="startInterview('hr')"
+                            style="text-align: left; padding: 1.5rem;">
+                            <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">👥</span>
+                            <strong>İK Mülakatı</strong>
+                            <p style="font-size: 0.8rem; color: var(--gray-500); margin: 0;">Genel uyum, kariyer
+                                hedefleri ve geçmiş deneyim soruları.</p>
+                        </button>
+                        <button class="btn btn-outline" onclick="startInterview('technical')"
+                            style="text-align: left; padding: 1.5rem;">
+                            <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">💻</span>
+                            <strong>Teknik Mülakat</strong>
+                            <p style="font-size: 0.8rem; color: var(--gray-500); margin: 0;">Alanınızla ilgili zorlayıcı
+                                teknik bilgi ve senaryo soruları.</p>
+                        </button>
+                        <button class="btn btn-outline" onclick="startInterview('behavioral')"
+                            style="text-align: left; padding: 1.5rem;">
+                            <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">🧠</span>
+                            <strong>Davranışsal Mülakat</strong>
+                            <p style="font-size: 0.8rem; color: var(--gray-500); margin: 0;">STAR tekniği gerektiren,
+                                soft-skill odaklı durum soruları.</p>
+                        </button>
+                        <button class="btn btn-outline" onclick="startInterview('case')"
+                            style="text-align: left; padding: 1.5rem;">
+                            <span style="font-size: 1.5rem; display: block; margin-bottom: 0.5rem;">📊</span>
+                            <strong>Vaka Analizi</strong>
+                            <p style="font-size: 0.8rem; color: var(--gray-500); margin: 0;">Problem çözme ve analitik
+                                düşünme becerilerinizi test eden senaryolar.</p>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Step 2: Loading -->
+            <div class="modal-body" id="interviewLoadingStep"
+                style="display: none; flex: 1; align-items: center; justify-content: center; text-align: center;">
+                <div class="spinner"></div>
+                <h4 style="margin-top: 1rem; color: var(--gray-600);">AI soru hazırlıyor...</h4>
+            </div>
+
+            <!-- Step 3: Interview Session -->
+            <div class="modal-body" id="interviewSessionStep"
+                style="display: none; flex: 1; flex-direction: column; overflow-y: auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                    <span class="badge badge-primary">Soru <span id="questionNumber">1</span></span>
+                    <button class="btn btn-sm btn-outline btn-danger" onclick="resetInterviewSimulator()">Bitir</button>
+                </div>
+
+                <div class="interview-question-box"
+                    style="background: white; border: 1px solid var(--gray-200); padding: 2rem; border-radius: 12px; box-shadow: var(--shadow-sm); margin-bottom: 2rem;">
+                    <h3 id="interviewQuestion" style="font-size: 1.25rem; line-height: 1.6; color: var(--gray-900);">
+                        Soru yükleniyor...</h3>
+                </div>
+
+                <div class="interview-controls">
+                    <div style="margin-bottom: 1rem;">
+                        <label class="form-label">Notlarınız (Opsiyonel)</label>
+                        <textarea id="userAnswerNotes" class="form-textarea"
+                            placeholder="Cevabınızı buraya not alabilirsiniz..." rows="3"></textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="loadNextQuestion()">Sonraki Soru ➡️</button>
+                        <button class="btn btn-secondary" id="showTipBtn" onclick="toggleInterviewTip()">👀 İpucu /
+                            Beklenen Cevap</button>
+                    </div>
+                </div>
+
+                <div id="interviewFeedback"
+                    style="display: none; margin-top: 1.5rem; background: #fffbeb; border: 1px solid #fcd34d; padding: 1.5rem; border-radius: 8px;">
+                    <h5 style="color: #b45309; margin-top: 0;">💡 İpucu & Beklenen Cevap Yönü</h5>
+                    <p id="interviewTipContent" style="color: #92400e; margin-bottom: 0;"></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Chat Widget -->
+    <div class="ai-chat-widget" id="aiChatWidget">
+        <div class="chat-header" onclick="toggleChat()">
+            <div class="chat-header-content">
+                <div class="chat-avatar">🤖</div>
+                <div>
+                    <div class="chat-title">AI Asistan</div>
+                    <div class="chat-status">Çevrimiçi</div>
+                </div>
+            </div>
+            <button class="chat-toggle-btn" id="chatToggleBtn">
+                <span id="chatIcon">💬</span>
+            </button>
+        </div>
+
+        <div class="chat-body" id="chatBody">
+            <div class="chat-messages" id="chatMessages">
+                <div class="chat-message ai-message">
+                    <div class="message-avatar">🤖</div>
+                    <div class="message-content">
+                        <p>Editördesiniz! Takıldığınız bir yer olursa bana sorabilirsiniz.</p>
+                        <div class="quick-actions">
+                            <button class="quick-action-btn"
+                                onclick="sendQuickMessage('Bu maddeyi daha profesyonel yapar mısın?')">✍️ Yeniden
+                                Yaz</button>
+                            <button class="quick-action-btn"
+                                onclick="sendQuickMessage('Eksik anahtar kelime var mı?')">🔍 Kontrol Et</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-input-container">
+                <input type="text" class="chat-input" id="chatInput" placeholder="Sorunuzu yazın..."
+                    onkeypress="handleChatKeyPress(event)">
+                <button class="chat-send-btn" onclick="sendMessage()">
+                    <span>📤</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <button class="ai-chat-fab" id="aiChatFab" onclick="toggleChat()">
+        <span>🤖</span>
+        <span class="fab-badge">AI</span>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kayıt Ol - VitaNovus</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Supabase CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        body {
+            background: var(--gray-50);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .auth-container {
+            background: white;
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="auth-container">
+        <div class="auth-header">
+            <h2 class="text-gradient">VitaNovus</h2>
+            <p>Yeni hesap oluşturun</p>
+        </div>
+
+        <form id="registerForm">
+            <div class="form-group">
+                <label class="form-label">E-posta</label>
+                <input type="email" id="email" class="form-input" required placeholder="ornek@email.com">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Şifre</label>
+                <input type="password" id="password" class="form-input" required placeholder="********" minlength="6">
+            </div>
+
+            <button type="submit" class="btn btn-primary" style="width: 100%;">Kayıt Ol</button>
+        </form>
+
+        <div style="text-align: center; margin-top: 1rem; font-size: 0.9rem;">
+            Zaten hesabınız var mı? <a href="login.html"
+                style="color: var(--primary-600); text-decoration: none; font-weight: 500;">Giriş Yap</a>
+        </div>
+
+        <div id="message" style="margin-top: 1rem; text-align: center; color: var(--error); font-size: 0.9rem;"></div>
+    </div>
+
+    <script>
+        (function () {
+            // --- Supabase Init (INLINE) ---
+            const SUPABASE_URL = 'https://mykuwuuqhygxwigbiezk.supabase.co';
+            const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im15a3V3dXVxaHlneHdpZ2JpZXprIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA3OTEzMDMsImV4cCI6MjA4NjM2NzMwM30.b41hFAjyicVKS28HyRxzoeNvjeCGKlYBeQUwBZn7O84';
+
+            let supabaseClient = null;
+
+            try {
+                if (window.supabase) {
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+                } else {
+                    console.error('CRITICAL: window.supabase library NOT found!');
+                }
+            } catch (e) {
+                console.error('CRITICAL: Supabase init failed:', e);
+            }
+
+            // --- Auth Function ---
+            async function performSignUp(email, password) {
+                if (!supabaseClient) {
+                    throw new Error('Supabase istemcisi başlatılamadı. Sayfayı yenileyin.');
+                }
+                const { data, error } = await supabaseClient.auth.signUp({
+                    email: email,
+                    password: password,
+                });
+                return { data, error };
+            }
+
+            // --- Event Listener ---
+            const registerForm = document.getElementById('registerForm');
+            if (registerForm) {
+                registerForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    const messageEl = document.getElementById('message');
+
+                    messageEl.textContent = 'Kayıt yapılıyor...';
+                    messageEl.style.color = 'var(--primary-600)';
+
+                    try {
+                        const { data, error } = await performSignUp(email, password);
+
+                        if (error) {
+                            console.error('Register Error:', error);
+                            messageEl.textContent = 'Hata: ' + error.message;
+                            messageEl.style.color = 'var(--error)';
+                        } else {
+                            messageEl.textContent = 'Başarılı! Lütfen e-postanızı kontrol edip onaylayın. Giriş sayfasına yönlendiriliyorsunuz...';
+                            messageEl.style.color = 'var(--success)';
+                            setTimeout(() => {
+                                window.location.href = 'login.html';
+                            }, 3000);
+                        }
+                    } catch (err) {
+                        console.error('Unexpected Error:', err);
+                        messageEl.textContent = 'Beklenmeyen Hata: ' + err.message;
+                        messageEl.style.color = 'var(--error)';
+                    }
+                });
+            }
+        })();
+    </script>
+</body>
+
+</html>

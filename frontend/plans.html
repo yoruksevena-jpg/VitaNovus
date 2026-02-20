@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yükselt - VitaNovus</title>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        body {
+            background-color: #f9fafb;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <a href="index.html" class="sidebar-brand">VitaNovus</a>
+            </div>
+            <nav class="sidebar-nav">
+                <a href="dashboard.html" class="sidebar-link">
+                    <span class="sidebar-icon">🏠</span> Dashboard
+                </a>
+                <a href="editor.html" class="sidebar-link">
+                    <span class="sidebar-icon">📄</span> CV Builder
+                </a>
+                <a href="letters.html" class="sidebar-link">
+                    <span class="sidebar-icon">📝</span> My Letters
+                </a>
+                <a href="optimize.html" class="sidebar-link">
+                    <span class="sidebar-icon">⚙️</span> Optimize
+                </a>
+                <a href="plans.html" class="sidebar-link active">
+                    <span class="sidebar-icon">💳</span> Upgrade Plan
+                </a>
+                <a href="settings.html" class="sidebar-link">
+                    <span class="sidebar-icon">⚙️</span> Settings
+                </a>
+            </nav>
+            <div class="sidebar-footer" style="padding: 1.5rem; border-top: 1px solid var(--gray-200);">
+                <div class="user-info" style="display: flex; gap: 0.75rem; align-items: center;">
+                    <div class="avatar user-avatar-display"
+                        style="width: 36px; height: 36px; background: var(--gradient-primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; font-size: 0.85rem; box-shadow: var(--shadow-sm);">
+                        US</div>
+                    <div>
+                        <div class="user-name-display"
+                            style="font-weight: 600; font-size: 0.9rem; color: var(--gray-900);">User Name</div>
+                        <div class="user-email-display" style="font-size: 0.75rem; color: var(--gray-500);">Free Plan
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <header class="header"
+                style="background: white; border-bottom: 1px solid var(--gray-200); padding: 1rem 2rem;">
+                <div class="container-fluid"
+                    style="display: flex; justify-content: space-between; align-items: center; max-width: 1280px; margin: 0 auto; width: 100%;">
+                    <h2 style="font-size: 1.25rem; margin: 0; font-weight: 600;">Plan Yükselt</h2>
+                </div>
+            </header>
+
+            <section class="section" style="padding-top: 2rem; min-height: 80vh;">
+                <div class="container">
+                    <div class="pricing-grid">
+                        <!-- Free Plan -->
+                        <div class="pricing-card">
+                            <h3 class="pricing-name">Başlangıç</h3>
+                            <div class="pricing-price">0₺<span>/ay</span></div>
+                            <ul class="pricing-features">
+                                <li>1 CV Şablonu</li>
+                                <li>PDF İndirme</li>
+                                <li>Temel AI Asistanı</li>
+                            </ul>
+                            <button class="btn btn-outline btn-lg" style="width: 100%;">Mevcut Plan</button>
+                        </div>
+
+                        <!-- Pro Plan -->
+                        <div class="pricing-card featured">
+                            <span class="pricing-badge">POPÜLER</span>
+                            <h3 class="pricing-name">Pro Plan</h3>
+                            <div class="pricing-price">199₺<span>/ay</span></div>
+                            <ul class="pricing-features">
+                                <li>Sınırsız CV Şablonu</li>
+                                <li>Gelişmiş AI Yazar</li>
+                                <li>ATS Analizi</li>
+                                <li>Ön Yazı Oluşturucu</li>
+                                <li>7/24 Destek</li>
+                            </ul>
+                            <button class="btn btn-primary btn-lg" style="width: 100%;">Hemen Yükselt</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="auth.js"></script>
+    <script src="app.js"></script>
+</body>
+
+</html>

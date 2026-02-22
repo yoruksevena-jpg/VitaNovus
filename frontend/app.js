@@ -3,9 +3,37 @@
 // ===================================
 
 // API Configuration
-const GEMINI_API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+const GEMINI_API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.protocol === 'file:')
   ? 'http://localhost:3000/api/generate-content'
   : '/api/generate-content';
+
+// Global State
+let currentLang = localStorage.getItem('vita-lang') || (navigator.language.startsWith('tr') ? 'tr' : 'en');
+
+function updatePageLanguage() {
+  const trans = window.translations[currentLang];
+  if (!trans) return;
+
+  document.querySelectorAll('[data-i18n]').forEach(el => {
+    const key = el.getAttribute('data-i18n');
+    if (trans[key]) {
+      if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+        el.placeholder = trans[key];
+      } else {
+        el.textContent = trans[key];
+      }
+    }
+  });
+
+  // Update HTML lang attribute
+  document.documentElement.lang = currentLang;
+}
+
+function setLanguage(lang) {
+  currentLang = lang;
+  localStorage.setItem('vita-lang', lang);
+  updatePageLanguage();
+}
 
 // Global State
 let cvData = {
@@ -79,6 +107,9 @@ document.addEventListener('DOMContentLoaded', () => {
       // Landing page specific logic if any
     }
   }
+
+  // Initialize language
+  updatePageLanguage();
 
   // Add scroll effect to header (common)
   window.addEventListener('scroll', handleScroll);
@@ -1267,9 +1298,15 @@ function renderCVList() {
   }).join('');
 }
 
-function showNotification(message) {
+function showNotification(message, type = 'info') {
   // Create notification element
   const notification = document.createElement('div');
+
+  let borderColor = '#667eea'; // Default info (purple/blue)
+  if (type === 'error' || type === 'danger') borderColor = '#ef4444'; // Red
+  if (type === 'success') borderColor = '#10b981'; // Green
+  if (type === 'warning') borderColor = '#f59e0b'; // Orange
+
   notification.style.cssText = `
     position: fixed;
     top: 100px;
@@ -1278,9 +1315,11 @@ function showNotification(message) {
     padding: 1rem 1.5rem;
     border-radius: 0.75rem;
     box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    z-index: 9999;
     animation: slideInRight 0.3s ease-out;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid ${borderColor};
+    max-width: 350px;
+    pointer-events: auto;
   `;
   notification.textContent = message;
 
@@ -1289,7 +1328,7 @@ function showNotification(message) {
   setTimeout(() => {
     notification.style.animation = 'slideOutRight 0.3s ease-out';
     setTimeout(() => notification.remove(), 300);
-  }, 3000);
+  }, 4000);
 }
 
 // ===================================
@@ -2080,56 +2119,70 @@ async function loadNextQuestion() {
     experience = Array.from(expItems).map(item => item.querySelector('.exp-position').value).join(', ');
   }
 
-  // Construct Prompt based on Type
-  let promptContext = `
-    Sen profesyonel, sert ama adil bir mülakatçısın (Interviewer).
-    Adayın Profili:
-    - Pozisyon: ${jobTitle}
-    - Yetenekler: ${skills}
-    - Deneyim: ${experience}
-    
-    Mülakat Türü: ${currentInterviewType === 'technical' ? 'Teknik Mülakat (Zorlayıcı teknik detaylar sor)' :
-      currentInterviewType === 'behavioral' ? 'Davranışsal (STAR tekniği gerektiren durumlar sor)' :
-        'Senaryo Bazlı (Gerçek hayat problemi çözdür)'}
-    
-    GÖREV:
-    Bu aday için ${currentQuestionIndex}. soruyu sor. 
-    Lütfen sadece JSON formatında yanıt ver. JSON şu yapıda olmalı:
-    {
-      "question": "Soru metni buraya",
-      "tip": "Bu soruya verilecek ideal cevabın ana hatları ve ipuçları buraya"
-    }
-    
-    Soru gerçekten zorlayıcı ve ${jobTitle} pozisyonu için gerçekçi olsun.
-    Asla "Merhaba" veya giriş cümlesi kurma, sadece JSON döndür.
-  `;
+  // Construct Prompt based on Type (kısa ve hızlı)
+  const typeMap = {
+    'technical': 'Teknik',
+    'behavioral': 'Davranışsal (STAR)',
+    'hr': 'İK',
+    'case': 'Vaka Analizi'
+  };
+  const promptContext = `Bir ${typeMap[currentInterviewType] || 'genel'} mülakat sorusu oluştur. Pozisyon: ${jobTitle}. Yetenekler: ${skills.slice(0, 60)}. SADECE düz JSON döndür. Markdown, kod bloğu veya açıklama YAZMA. Cevap tam olarak şu formatta olmalı: {"question":"soru metni","tip":"ipucu metni"}`;
 
   try {
     const response = await fetch(GEMINI_API_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ contents: [{ parts: [{ text: promptContext }] }] })
+      body: JSON.stringify({
+        contents: [{ parts: [{ text: promptContext }] }],
+        generationConfig: { maxOutputTokens: 600, temperature: 0.8 }
+      })
     });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      throw new Error(errorData.error || `HTTP error! status: ${response.status}`);
+    }
 
     const data = await response.json();
 
-    if (data.candidates && data.candidates[0].content) {
+    if (data.candidates && data.candidates[0] && data.candidates[0].content && data.candidates[0].content.parts) {
       let text = data.candidates[0].content.parts[0].text;
-      // Clean up markdown code blocks if present
-      text = text.replace(/```json/g, '').replace(/```/g, '').trim();
 
       try {
-        currentQuestionData = JSON.parse(text);
+        // Markdown temizle
+        text = text.replace(/```json/gi, '').replace(/```/g, '').trim();
 
-        // Typewriter effect with "Click to Skip"
+        // JSON parse dene
+        const s = text.indexOf('{');
+        const e = text.lastIndexOf('}');
+        let parsed = null;
+        if (s !== -1 && e !== -1) {
+          try { parsed = JSON.parse(text.substring(s, e + 1)); } catch (e2) { parsed = null; }
+        }
+
+        if (parsed && parsed.question) {
+          currentQuestionData = {
+            question: typeof parsed.question === 'string' ? parsed.question : String(parsed.question),
+            tip: typeof parsed.tip === 'string' ? parsed.tip : String(parsed.tip || '')
+          };
+        } else {
+          // JSON kırıksa regex ile çıkar
+          const qMatch = text.match(/"question"\s*:\s*"([^"]+)/);
+          const tMatch = text.match(/"tip"\s*:\s*"([^"]+)/);
+          currentQuestionData = {
+            question: qMatch ? qMatch[1] : 'Soru yüklenemedi, tekrar deneyin.',
+            tip: tMatch ? tMatch[1] : ''
+          };
+        }
+
+        // Typewriter effect
         const questionElement = document.getElementById('interviewQuestion');
-        questionElement.textContent = ''; // Clear previous
+        questionElement.textContent = '';
 
         const questionText = currentQuestionData.question;
         let i = 0;
         let typingTimeout;
 
-        // Ensure cursor indicates interactivity
         questionElement.style.cursor = 'pointer';
         questionElement.title = 'Tamamını görmek için tıklayın';
 
@@ -2137,16 +2190,14 @@ async function loadNextQuestion() {
           if (i < questionText.length) {
             questionElement.textContent += questionText.charAt(i);
             i++;
-            typingTimeout = setTimeout(typeWriter, 30); // Speed of typing
+            typingTimeout = setTimeout(typeWriter, 30);
           } else {
-            // Done typing naturally
             questionElement.style.cursor = 'default';
             questionElement.onclick = null;
             questionElement.removeAttribute('title');
           }
         }
 
-        // Click logic
         questionElement.onclick = function () {
           clearTimeout(typingTimeout);
           questionElement.textContent = questionText;
@@ -2157,27 +2208,30 @@ async function loadNextQuestion() {
 
         typeWriter();
 
-        // Use marked if available, otherwise plain text
         if (typeof marked !== 'undefined') {
           document.getElementById('interviewTipContent').innerHTML = marked.parse(currentQuestionData.tip);
         } else {
           document.getElementById('interviewTipContent').textContent = currentQuestionData.tip;
         }
 
+        document.getElementById('interviewLoadingStep').style.display = 'none';
+        document.getElementById('interviewSessionStep').style.display = 'flex';
+
       } catch (parseError) {
-        console.error('JSON Parse Error:', parseError);
-        // Fallback if AI fails json format
+        console.error('JSON Parse Error:', parseError, 'Raw text:', text);
+        // Fallback for non-JSON or malformed responses
         document.getElementById('interviewQuestion').textContent = text;
         document.getElementById('interviewTipContent').textContent = "AI yanıtı formatlayamadı, ancak soru yukarıdadır.";
+        document.getElementById('interviewLoadingStep').style.display = 'none';
+        document.getElementById('interviewSessionStep').style.display = 'flex';
       }
+    } else {
+      throw new Error('AI yanıtı beklenen yapıda değil.');
     }
-
-    document.getElementById('interviewLoadingStep').style.display = 'none';
-    document.getElementById('interviewSessionStep').style.display = 'flex';
 
   } catch (error) {
     console.error('Interview Error:', error);
-    alert('Bir hata oluştu. Lütfen tekrar deneyin.');
+    showNotification('Mülakat sorusu oluşturulamadı: ' + error.message, 'error');
     closeInterviewSimulator();
   }
 }
